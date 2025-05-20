@@ -16,3 +16,11 @@ tamFuente = 48 #Tamaño de la fuente
 blanco = (255, 255, 255)
 negro = (0, 0, 0)
 rojo = (197, 29, 52)
+
+#-->Aleatoriedad del tablero<--
+def CrearTablero():
+    while True:
+        tablero = list(range(9)) #Crea una lista de 0 a 8
+        random.shuffle(tablero) #Mezcla la lista
+        if esResoluble(tablero): #Si el tablero es resoluble
+            return tablero #Devuelve el tablero
