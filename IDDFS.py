@@ -1,44 +1,46 @@
-#Agente que resuelve el puzzle 8 usando búsqueda primero en profundidad (DFS)
-#Busqueda no informada
+# Agente No Informado con IDDFS
 
 # Estado objetivo del puzzle 8
 objetivo = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
-# Función para obtener los vecinos (movimientos posibles) de un estado
-def obtenerVecinos(estado):
+# Función para obtener vecinos (movimientos válidos) de un estado
+def obtener_vecinos(estado):
     vecinos = []  # Lista para guardar los estados vecinos
     idx = estado.index(0)  # Encuentra la posición del espacio vacío (0)
     fila, col = idx // 3, idx % 3  # Calcula la fila y columna del espacio vacío
     direcciones = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Movimientos: arriba, abajo, izquierda, derecha
 
-    for dr, dc in direcciones:  # Para cada dirección posible
-        nf, nc = fila + dr, col + dc  # Nueva fila y columna después del movimiento
-        if 0 <= nf < 3 and 0 <= nc < 3:  # Verifica que la nueva posición esté dentro del tablero
-            new_idx = nf * 3 + nc  # Calcula el índice lineal del nuevo espacio
-            new_estado = estado.copy()  # Copia el estado actual
-            # Intercambia el espacio vacío con la casilla a mover
-            new_estado[idx], new_estado[new_idx] = new_estado[new_idx], new_estado[idx]
-            vecinos.append(new_estado)  # Agrega el nuevo estado a la lista de vecinos
-    return vecinos  # Devuelve la lista de jugadas
+    for df, dc in direcciones:  # Para cada dirección posible
+        nueva_fila, nueva_col = fila + df, col + dc  # Calcula la nueva posición del espacio vacío
+        if 0 <= nueva_fila < 3 and 0 <= nueva_col < 3:  # Verifica que la nueva posición esté dentro del tablero
+            nuevo_idx = nueva_fila * 3 + nueva_col  # Calcula el índice lineal del nuevo espacio
+            nuevo_estado = estado.copy()  # Copia el estado actual
+            # Intercambia el espacio vacío con la ficha vecina
+            nuevo_estado[idx], nuevo_estado[nuevo_idx] = nuevo_estado[nuevo_idx], nuevo_estado[idx]
+            vecinos.append(nuevo_estado)  # Agrega el nuevo estado a la lista de vecinos
+    return vecinos  # Devuelve la lista de vecinos
 
-# Búsqueda primero en profundidad (DFS) recursiva
-def dfs(estado, visitados=None, camino=None):
-    if visitados is None:
-        visitados = set()
-    if camino is None:
-        camino = []
+# Búsqueda en profundidad limitada (DLS)
+def dls(estado, limite, visitados):
+    if estado == objetivo:  # Si el estado actual es el objetivo
+        return [estado]     # Devuelve el camino (solo este estado)
+    if limite == 0:        # Si se llegó al límite de profundidad
+        return None        # No se encontró solución en este camino
 
-    visitados.add(tuple(estado))
-    camino.append(estado)
+    visitados.add(tuple(estado))  # Marca el estado como visitado
 
-    if estado == objetivo:
-        return camino  # Solución encontrada
+    for vecino in obtener_vecinos(estado):  # Para cada vecino del estado actual
+        if tuple(vecino) not in visitados:  # Si el vecino no ha sido visitado
+            resultado = dls(vecino, limite - 1, visitados.copy())  # Llama recursivamente con menor profundidad
+            if resultado:  # Si se encontró solución en el camino
+                return [estado] + resultado  # Devuelve el camino completo
+    return None  # Si no se encontró solución, devuelve None
 
-    for vecino in obtenerVecinos(estado):
-        if tuple(vecino) not in visitados:
-            resultado = dfs(vecino, visitados, camino.copy())
-            if resultado:
-                return resultado
-
-    return None  # No se encontró solución desde este camino
-
+# Búsqueda por profundización iterativa (IDDFS)
+def iddfs(inicial, max_profundidad=30):
+    for limite in range(max_profundidad):  # Prueba con límites de profundidad crecientes
+        visitados = set()  # Conjunto de estados visitados para cada iteración
+        camino = dls(inicial, limite, visitados)  # Llama a DLS con el límite actual
+        if camino:  # Si se encontró solución
+            return camino  # Devuelve el camino
+    return None  # Si no se encontró solución en ningún límite, devuelve None

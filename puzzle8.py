@@ -8,7 +8,6 @@ import sys  #sistema
 
 #--->Importaciones<---
 from IDDFS import iddfs
-
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
 tamTablero = 3 #Tamaño del tablero
