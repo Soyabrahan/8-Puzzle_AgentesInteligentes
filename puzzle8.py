@@ -33,3 +33,17 @@ def esResoluble(tablero):
             if tablero[i] != 0 and tablero[j] != 0 and tablero[i] > tablero[j]: #Si el valor de la casilla es mayor que el de la siguiente
                 inv_count += 1 #Aumenta el contador
     return inv_count % 2 == 0 #Devuelve True si el contador es par
+
+#-->Dibujar el tablero<--
+def dibujar_tablero(pantalla, tablero, fuente):
+    pantalla.fill(blanco)  # Rellena la pantalla de color blanco
+    for i in range(9):  # Recorre cada casilla del tablero
+        x = (i % tamTablero) * tamCasilla  # Calcula la posición x de la casilla
+        y = (i // tamTablero) * tamCasilla  # Calcula la posición y de la casilla
+        valor = tablero[i]  # Obtiene el valor de la casilla
+        if valor != 0:  # Si la casilla no es el espacio vacío
+            pygame.draw.rect(pantalla, rojo, (x, y, tamCasilla, tamCasilla))  # Dibuja el rectángulo azul
+            texto = fuente.render(str(valor), True, blanco)  # Renderiza el número en blanco
+            rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
+            pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
+        pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2)  # Dibuja el borde negro
