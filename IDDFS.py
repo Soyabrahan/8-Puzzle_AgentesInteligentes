@@ -17,3 +17,4 @@ def obtenerVecinos(estado):
             new_estado[idx], new_estado[new_idx] = new_estado[new_idx], new_estado[idx]
             vecinos.append(new_estado)  # Agrega el nuevo estado a la lista de vecinos
     return vecinos  # Devuelve la lista de jugadas
+
