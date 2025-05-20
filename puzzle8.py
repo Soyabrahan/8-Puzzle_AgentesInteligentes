@@ -24,3 +24,12 @@ def CrearTablero():
         random.shuffle(tablero) #Mezcla la lista
         if esResoluble(tablero): #Si el tablero es resoluble
             return tablero #Devuelve el tablero
+        
+#-->Comprobar si el tablero es resoluble<--
+def esResoluble(tablero):
+    inv_count = 0 #Contador de inversiones
+    for i in range(8): #Recorre el tablero
+        for j in range(i + 1, 9): #Recorre el tablero
+            if tablero[i] != 0 and tablero[j] != 0 and tablero[i] > tablero[j]: #Si el valor de la casilla es mayor que el de la siguiente
+                inv_count += 1 #Aumenta el contador
+    return inv_count % 2 == 0 #Devuelve True si el contador es par
