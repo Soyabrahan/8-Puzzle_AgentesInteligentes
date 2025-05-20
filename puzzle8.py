@@ -7,7 +7,7 @@ import random #Aleatoriedad
 import sys  #sistema
 
 #--->Importaciones<---
-from IDDFS import iddfs
+from IDDFS import iddfs  # Importa la función IDDFS del archivo iddfs.py
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
 tamTablero = 3 #Tamaño del tablero
