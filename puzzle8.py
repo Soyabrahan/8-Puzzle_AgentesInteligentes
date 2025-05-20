@@ -4,6 +4,7 @@
 #--->LIBRERIAS<---
 import pygame #Interfaz Grafica
 import random #Aleatoriedad
+import sys  #sistema
 
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
@@ -47,3 +48,26 @@ def dibujar_tablero(pantalla, tablero, fuente):
             rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
             pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
         pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2)  # Dibuja el borde negro
+        
+def main():
+    pygame.init()  # Inicializa pygame
+    pantalla = pygame.display.set_mode((ancho, alto))  # Crea la ventana
+    pygame.display.set_caption("Puzzle 8")  # Título de la ventana
+    fuente = pygame.font.Font(None, tamFuente)  # Fuente para los números
+
+    tablero = CrearTablero()  # Genera un tablero aleatorio resoluble
+
+    ejecutando = True
+    while ejecutando:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                ejecutando = False  # Sale del bucle si se cierra la ventana
+
+        dibujar_tablero(pantalla, tablero, fuente)  # Dibuja el tablero
+        pygame.display.flip()  # Actualiza la pantalla
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
