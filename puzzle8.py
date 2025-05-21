@@ -59,6 +59,10 @@ def main():
 
     tablero = CrearTablero()  # Tablero aleatorio resoluble
 
+    # Dibuja el tablero inicial y actualiza la pantalla
+    dibujar_tablero(pantalla, tablero, fuente)
+    pygame.display.flip()
+
     # Ejecuta IDDFS y muestra el resultado
     solucion = iddfs(tablero, max_profundidad=50)
     if solucion:
