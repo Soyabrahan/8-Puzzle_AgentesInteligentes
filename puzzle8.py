@@ -7,7 +7,7 @@ import random #Aleatoriedad
 import sys  #sistema
 
 #--->Importaciones<---
-from IDDFS import iddfs
+from IDDFS import iddfs  # Importa la función IDDFS del archivo iddfs.py
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
 tamTablero = 3 #Tamaño del tablero
@@ -58,6 +58,10 @@ def main():
     fuente = pygame.font.Font(None, tamFuente)
 
     tablero = CrearTablero()  # Tablero aleatorio resoluble
+
+    # Dibuja el tablero inicial y actualiza la pantalla
+    dibujar_tablero(pantalla, tablero, fuente)
+    pygame.display.flip()
 
     # Ejecuta IDDFS y muestra el resultado
     solucion = iddfs(tablero, max_profundidad=50)
