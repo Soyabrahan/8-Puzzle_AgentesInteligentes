@@ -6,6 +6,8 @@ import pygame #Interfaz Grafica
 import random #Aleatoriedad
 import sys  #sistema
 
+#--->Importaciones<---
+from DFS import iddfs
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
 tamTablero = 3 #Tamaño del tablero
@@ -48,23 +50,41 @@ def dibujar_tablero(pantalla, tablero, fuente):
             rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
             pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
         pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2)  # Dibuja el borde negro
-        
+
 def main():
-    pygame.init()  # Inicializa pygame
-    pantalla = pygame.display.set_mode((ancho, alto))  # Crea la ventana
-    pygame.display.set_caption("Puzzle 8")  # Título de la ventana
-    fuente = pygame.font.Font(None, tamFuente)  # Fuente para los números
+    pygame.init()
+    pantalla = pygame.display.set_mode((ancho, alto))
+    pygame.display.set_caption("Puzzle 8")
+    fuente = pygame.font.Font(None, tamFuente)
 
-    tablero = CrearTablero()  # Genera un tablero aleatorio resoluble
+    tablero = CrearTablero()  # Tablero aleatorio resoluble
 
+    # Ejecuta IDDFS y muestra el resultado
+    solucion = iddfs(tablero, max_profundidad=50)
+    if solucion:
+        print("Solución encontrada en", len(solucion)-1, "movimientos.")
+        for paso in solucion:
+            print(paso)
+    else:
+        print("No se encontró solución.")
+
+    # Muestra la solución paso a paso en la ventana
     ejecutando = True
+    paso_actual = 0
     while ejecutando:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
-                ejecutando = False  # Sale del bucle si se cierra la ventana
+                ejecutando = False
 
-        dibujar_tablero(pantalla, tablero, fuente)  # Dibuja el tablero
-        pygame.display.flip()  # Actualiza la pantalla
+        if solucion:
+            dibujar_tablero(pantalla, solucion[paso_actual], fuente)
+        else:
+            dibujar_tablero(pantalla, tablero, fuente)
+        pygame.display.flip()
+
+        pygame.time.wait(1000)
+        if solucion and paso_actual < len(solucion) - 1:
+            paso_actual += 1
 
     pygame.quit()
     sys.exit()
