@@ -7,7 +7,7 @@ import random #Aleatoriedad
 import sys  #sistema
 
 #--->Importaciones<---
-from DFS import iddfs
+from IDDFS import iddfs
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 100 #Tamaño de la casilla
 tamTablero = 3 #Tamaño del tablero
