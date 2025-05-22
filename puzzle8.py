@@ -51,7 +51,7 @@ def dibujar_tablero(pantalla, tablero, fuente):
         y = (i // tamTablero) * tamCasilla + 60  # Deja espacio arriba para info
         valor = tablero[i]  # Obtiene el valor de la casilla
         if valor != 0:  # Si la casilla no es el espacio vacío
-            pygame.draw.rect(pantalla, azul, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)  # Dibuja el rectángulo azul
+            pygame.draw.rect(pantalla, rojo, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)  # Dibuja el rectángulo azul
             texto = fuente.render(str(valor), True, blanco)  # Renderiza el número en blanco
             rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
             pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
@@ -93,26 +93,7 @@ def mostrar_info_final(pantalla, fuente, tiempo, movimientos):
     pygame.display.flip()
     return btn_menu
 
-# Generador para IDDFS paso a paso
-def iddfs_pasos(tablero, max_profundidad=30):
-    for limite in range(max_profundidad):
-        visitados = set()
-        stack = [(tablero, [tablero], 0)]
-        while stack:
-            estado, camino, profundidad = stack.pop()
-            if estado == [1,2,3,4,5,6,7,8,0]:
-                for paso in camino:
-                    yield paso
-                return
-            if profundidad < limite:
-                visitados.add(tuple(estado))
-                for vecino in reversed(IDDFS_obtener_vecinos(estado)):
-                    if tuple(vecino) not in visitados:
-                        stack.append((vecino, camino + [vecino], profundidad + 1))
-                        yield vecino  # Muestra el paso aunque no sea solución final
 
-# Importa la función de vecinos para el generador
-from IDDFS import obtener_vecinos as IDDFS_obtener_vecinos
 
 def main():
     pygame.init()
