@@ -3,20 +3,20 @@
 #--->Importaciones<---
 from IDDFS import obtener_vecinos  # Importa la función obtener_vecinos del archivo iddfs.py
 
+objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]   # Estado objetivo del puzzle
+
 def heuristica_manhattan(estado):
     distancia = 0  # Inicializa la distancia total en 0
     for i, valor in enumerate(estado):  # Recorre cada casilla y su valor
         if valor == 0:  # Si es el espacio vacío, lo ignora
             continue
-        objetivo_i = valor - 1  # Calcula la posición objetivo del valor
+        objetivo_i = objetivo.index(valor)  # Busca la posición real del valor en el objetivo
         x1, y1 = i // 3, i % 3  # Coordenadas actuales del valor
         x2, y2 = objetivo_i // 3, objetivo_i % 3  # Coordenadas objetivo del valor
         distancia += abs(x1 - x2) + abs(y1 - y2)  # Suma la distancia de Manhattan
     return distancia  # Devuelve la distancia total
 
 import heapq  # Importa heapq para la cola de prioridad
-
-objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]   # Estado objetivo del puzzle
 
 nodos_expandidos = 0  # Variable global
 

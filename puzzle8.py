@@ -170,7 +170,24 @@ def main():
                     if evento.type == pygame.MOUSEBUTTONDOWN:
                         esperando_click = False
                 reloj.tick(FPS)
+        else:
+            # Mostrar mensaje en pantalla
+            pantalla.fill(gris)
+            texto = fuente.render("¡No se encontró solución!", True, rojo)
+            pantalla.blit(texto, (ancho // 2 - texto.get_width() // 2, alto // 2))
+            pygame.display.flip()
+            print("¡No se encontró solución!")  # Mensaje en terminal
 
+            # Espera a que el usuario haga click o cierre la ventana
+            esperando_click = True
+            while esperando_click:
+                for evento in pygame.event.get():
+                    if evento.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if evento.type == pygame.MOUSEBUTTONDOWN:
+                        esperando_click = False
+                reloj.tick(FPS)
 
         print(f"Agente: {agente}")
         print(f"Tiempo de búsqueda: {tiempo:.2f} segundos")
