@@ -16,16 +16,20 @@ def heuristica_manhattan(estado):
 
 import heapq  # Importa heapq para la cola de prioridad
 
-objetivo = [1, 2, 3, 4, 5, 6, 7, 8, 0]  # Estado objetivo del puzzle
+objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]   # Estado objetivo del puzzle
 
+nodos_expandidos = 0  # Variable global
 
 def a_estrella(inicial):
+    global nodos_expandidos
+    nodos_expandidos = 0  # Reinicia el contador
     frontera = []  # Cola de prioridad para los nodos a explorar
     heapq.heappush(frontera, (heuristica_manhattan(inicial), 0, inicial, []))  # Inserta el estado inicial en la frontera (f, g, estado, camino)
     visitados = set()  # Conjunto de estados visitados
 
     while frontera:  # Mientras haya nodos por explorar
         f, g, actual, camino = heapq.heappop(frontera)  # Extrae el nodo con menor costo f
+        nodos_expandidos += 1  # Cuenta cada vez que expandes un nodo
 
         if actual == objetivo:  # Si el estado actual es el objetivo
             return camino + [actual]  # Devuelve el camino hasta el objetivo

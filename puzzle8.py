@@ -6,9 +6,12 @@ import pygame #Interfaz Grafica
 import random #Aleatoriedad
 import sys  #sistema
 import time
+import IDDFS
+import AgenteInformado
 #--->Importaciones<---
 from IDDFS import iddfs  # Importa la función IDDFS del archivo iddfs.py
 from AgenteInformado import a_estrella  # Agente informado (debes tener este archivo)
+
 
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 120  # Más grande para mejor visualización
@@ -35,13 +38,20 @@ def CrearTablero():
             return tablero #Devuelve el tablero
         
 #-->Comprobar si el tablero es resoluble<--
+objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]
+
 def esResoluble(tablero):
-    inv_count = 0 #Contador de inversiones
-    for i in range(8): #Recorre el tablero
-        for j in range(i + 1, 9): #Recorre el tablero
-            if tablero[i] != 0 and tablero[j] != 0 and tablero[i] > tablero[j]: #Si el valor de la casilla es mayor que el de la siguiente
-                inv_count += 1 #Aumenta el contador
-    return inv_count % 2 == 0 #Devuelve True si el contador es par
+    # Quita el 0 (espacio vacío) de ambos
+    t = [x for x in tablero if x != 0]
+    o = [x for x in objetivo if x != 0]
+    # Calcula el número de inversiones respecto al objetivo
+    inv = 0
+    for i in range(len(t)):
+        for j in range(i+1, len(t)):
+            # Compara la posición de los valores en el objetivo
+            if o.index(t[i]) > o.index(t[j]):
+                inv += 1
+    return inv % 2 == 0
 
 #-->Dibujar el tablero<--
 def dibujar_tablero(pantalla, tablero, fuente):
@@ -80,12 +90,14 @@ def mostrar_info(pantalla, fuente, tiempo, movimientos):
     texto = fuente.render(info, True, azul)
     pantalla.blit(texto, (10, 10))
 
-def mostrar_info_final(pantalla, fuente, tiempo, movimientos):
+def mostrar_info_final(pantalla, fuente, tiempo, movimientos, nodos):
     pantalla.fill(gris)
     texto1 = fuente.render(f"Tiempo: {tiempo:.2f}s", True, azul)
     texto2 = fuente.render(f"Movimientos: {movimientos}", True, azul)
-    pantalla.blit(texto1, (ancho // 2 - texto1.get_width() // 2, alto // 2 - 60))
-    pantalla.blit(texto2, (ancho // 2 - texto2.get_width() // 2, alto // 2))
+    texto3 = fuente.render(f"Nodos expandidos: {nodos}", True, azul)
+    pantalla.blit(texto1, (ancho // 2 - texto1.get_width() // 2, alto // 2 - 90))
+    pantalla.blit(texto2, (ancho // 2 - texto2.get_width() // 2, alto // 2 - 40))
+    pantalla.blit(texto3, (ancho // 2 - texto3.get_width() // 2, alto // 2 + 10))
     btn_menu = pygame.Rect(ancho // 2 - 100, alto // 2 + 60, 200, 50)
     pygame.draw.rect(pantalla, verde, btn_menu, border_radius=10)
     txt_menu = fuente.render("Volver al menú", True, blanco)
@@ -125,20 +137,22 @@ def main():
 
         t0 = time.time()
         if seleccion == "iddfs":
-            solucion = iddfs(tablero, max_profundidad=30)
+            solucion = IDDFS.iddfs(tablero, max_profundidad=30)
             agente = "No informado (IDDFS)"
+            nodos = IDDFS.nodos_expandidos
         else:
-            solucion = a_estrella(tablero)
+            solucion = AgenteInformado.a_estrella(tablero)
             agente = "Informado (A*)"
+            nodos = AgenteInformado.nodos_expandidos
         t1 = time.time()
-        tiempo = t1 - t0  # <--- ESTE es el tiempo de búsqueda, úsalo en la animación
+        tiempo = t1 - t0
         movimientos = len(solucion) - 1 if solucion else 0
 
         # Animación de la solución encontrada
         if solucion:
             for paso in solucion:
                 dibujar_tablero(pantalla, paso, fuente)
-                mostrar_info(pantalla, fuente, tiempo, movimientos)  # <--- Usa el tiempo fijo
+                mostrar_info(pantalla, fuente, tiempo, movimientos)
                 pygame.display.flip()
                 for evento in pygame.event.get():
                     if evento.type == pygame.QUIT:
@@ -146,15 +160,27 @@ def main():
                         sys.exit()
                 pygame.time.wait(300)
 
-        # Imprime el tiempo de búsqueda y movimientos en terminal
+            # --- Pausa hasta que el usuario haga click ---
+            esperando_click = True
+            while esperando_click:
+                for evento in pygame.event.get():
+                    if evento.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if evento.type == pygame.MOUSEBUTTONDOWN:
+                        esperando_click = False
+                reloj.tick(FPS)
+
+
         print(f"Agente: {agente}")
         print(f"Tiempo de búsqueda: {tiempo:.2f} segundos")
         print(f"Movimientos: {movimientos}")
+        print(f"Nodos expandidos: {nodos}")
 
         # Pantalla final con botón para volver al menú
         esperando = True
         while esperando:
-            btn_menu = mostrar_info_final(pantalla, fuente, tiempo, movimientos)
+            btn_menu = mostrar_info_final(pantalla, fuente, tiempo, movimientos, nodos)
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     pygame.quit()

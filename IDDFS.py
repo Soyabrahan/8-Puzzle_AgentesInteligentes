@@ -1,7 +1,7 @@
 # Agente No Informado con IDDFS
 
 # Estado objetivo del puzzle 8
-objetivo = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]  # Estado objetivo del puzzle 8
 
 # Función para obtener vecinos (movimientos válidos) de un estado
 def obtener_vecinos(estado):
@@ -20,8 +20,12 @@ def obtener_vecinos(estado):
             vecinos.append(nuevo_estado)  # Agrega el nuevo estado a la lista de vecinos
     return vecinos  # Devuelve la lista de vecinos
 
+nodos_expandidos = 0  # Variable global
+
 # Búsqueda en profundidad limitada (DLS)
 def dls(estado, limite, visitados):
+    global nodos_expandidos
+    nodos_expandidos += 1  # Cuenta cada vez que expandes un nodo
     if estado == objetivo:  # Si el estado actual es el objetivo
         return [estado]     # Devuelve el camino (solo este estado)
     if limite == 0:        # Si se llegó al límite de profundidad
@@ -38,6 +42,8 @@ def dls(estado, limite, visitados):
 
 # Búsqueda por profundización iterativa (IDDFS)
 def iddfs(inicial, max_profundidad=30):
+    global nodos_expandidos
+    nodos_expandidos = 0  # Reinicia el contador antes de cada búsqueda
     for limite in range(max_profundidad):  # Prueba con límites de profundidad crecientes
         visitados = set()  # Conjunto de estados visitados para cada iteración
         camino = dls(inicial, limite, visitados)  # Llama a DLS con el límite actual
