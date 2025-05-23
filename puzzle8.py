@@ -110,7 +110,7 @@ def mostrar_info_final(pantalla, fuente, tiempo, movimientos, nodos):
 def main():
     pygame.init()
     pantalla = pygame.display.set_mode((ancho, alto))
-    pygame.display.set_caption("Puzzle 8")
+    pygame.display.set_caption("Puzzle 8/Abrahan Ramirez")
     fuente = pygame.font.Font(None, tamFuente)
     reloj = pygame.time.Clock()
 
