@@ -34,17 +34,17 @@ def CrearTablero():
     while True:
         tablero = list(range(9)) #Crea una lista de 0 a 8
         random.shuffle(tablero) #Mezcla la lista
-        if esResoluble(tablero): #Si el tablero es resoluble
+        if esResoluble(tablero, objetivo): #Si el tablero es resoluble
             return tablero #Devuelve el tablero
         
 #-->Comprobar si el tablero es resoluble<--
 objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]
 
-def esResoluble(tablero):
+def esResoluble(tablero, objetivo):
     # Quita el 0 (espacio vacío) de ambos
     t = [x for x in tablero if x != 0]
     o = [x for x in objetivo if x != 0]
-    # Calcula el número de inversiones respecto al objetivo
+    # Calcula la permutación necesaria para convertir t en o
     inv = 0
     for i in range(len(t)):
         for j in range(i+1, len(t)):
