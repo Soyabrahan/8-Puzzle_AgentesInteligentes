@@ -9,8 +9,7 @@ import time
 import IDDFS
 import AgenteInformado
 #--->Importaciones<---
-from IDDFS import iddfs  # Importa la función IDDFS del archivo iddfs.py
-from AgenteInformado import a_estrella  # Agente informado (debes tener este archivo)
+
 
 
 #--->CONFIGURACION GENERAL<---
@@ -29,6 +28,12 @@ azul = (0, 102, 204)
 verde = (0, 200, 70)
 gris = (220, 220, 220)
 
+# Nuevos colores personalizados para la nueva orden
+fondo_menu = (52, 33, 52)
+color_botones = (142, 114, 176)
+color_casillas = (252, 92, 92)
+color_letras = blanco
+
 #-->Aleatoriedad del tablero<--
 # def CrearTablero():
 #     while True:
@@ -40,6 +45,7 @@ gris = (220, 220, 220)
 def CrearTablero():
     #return [5, 0, 1, 6, 3, 2, 8, 7, 4] #18 movimientos
      return [6,1,0,8,5,7,2,4,3] #22 movimientos
+     #return [1, 2, 3, 4, 5, 6, 0, 7, 8] #irresoluble
 
         
 #-->Comprobar si el tablero es resoluble<--
@@ -63,30 +69,30 @@ def esResoluble(tablero, objetivo):
 
 #-->Dibujar el tablero<--
 def dibujar_tablero(pantalla, tablero, fuente):
-    pantalla.fill(gris) # Rellena la pantalla de color gris
+    pantalla.fill(fondo_menu) # Fondo del tablero igual al menú
     for i in range(9):  # Recorre cada casilla del tablero
         x = (i % tamTablero) * tamCasilla  # Calcula la posición x de la casilla
         y = (i // tamTablero) * tamCasilla + 60  # Deja espacio arriba para info
         valor = tablero[i]  # Obtiene el valor de la casilla
         if valor != 0:  # Si la casilla no es el espacio vacío
-            pygame.draw.rect(pantalla, rojo, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)  # Dibuja el rectángulo azul
-            texto = fuente.render(str(valor), True, blanco)  # Renderiza el número en blanco
+            pygame.draw.rect(pantalla, color_casillas, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)  # Casilla
+            texto = fuente.render(str(valor), True, color_letras)  # Letras negras
             rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
             pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
         pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2, border_radius=10)  # Dibuja el borde negro
 
 def mostrar_menu(pantalla, fuente):
-    pantalla.fill(gris)
-    titulo = fuente.render("Puzzle 8 - Selecciona el agente", True, azul)
+    pantalla.fill(fondo_menu)  # Fondo menú
+    titulo = fuente.render("Puzzle 8 - Selecciona el agente", True, color_letras)
     pantalla.blit(titulo, (ancho // 2 - titulo.get_width() // 2, 30))
 
     btn_iddfs = pygame.Rect(ancho // 2 - 160, 120, 320, 60)
     btn_astar = pygame.Rect(ancho // 2 - 160, 210, 320, 60)
-    pygame.draw.rect(pantalla, azul, btn_iddfs, border_radius=15)
-    pygame.draw.rect(pantalla, verde, btn_astar, border_radius=15)
+    pygame.draw.rect(pantalla, color_botones, btn_iddfs, border_radius=15)  # Botón
+    pygame.draw.rect(pantalla, color_botones, btn_astar, border_radius=15)  # Botón
 
-    txt_iddfs = fuente.render("Agente No Informado (IDDFS)", True, blanco)
-    txt_astar = fuente.render("Agente Informado (A*)", True, blanco)
+    txt_iddfs = fuente.render("Agente No Informado (IDDFS)", True, color_letras)
+    txt_astar = fuente.render("Agente Informado (A*)", True, color_letras)
     pantalla.blit(txt_iddfs, (btn_iddfs.x + 20, btn_iddfs.y + 15))
     pantalla.blit(txt_astar, (btn_astar.x + 20, btn_astar.y + 15))
 
@@ -95,19 +101,19 @@ def mostrar_menu(pantalla, fuente):
 
 def mostrar_info(pantalla, fuente, tiempo, movimientos):
     info = f"Tiempo: {tiempo:.2f}s  Movimientos: {movimientos}"
-    texto = fuente.render(info, True, azul)
+    texto = fuente.render(info, True, blanco)
     pantalla.blit(texto, (10, 10))
 
 def mostrar_info_final(pantalla, fuente, tiempo, movimientos, nodos):
-    pantalla.fill(gris)
-    texto1 = fuente.render(f"Tiempo: {tiempo:.2f}s", True, azul)
-    texto2 = fuente.render(f"Movimientos: {movimientos}", True, azul)
-    texto3 = fuente.render(f"Nodos expandidos: {nodos}", True, azul)
+    pantalla.fill(fondo_menu)
+    texto1 = fuente.render(f"Tiempo: {tiempo:.2f}s", True, blanco)
+    texto2 = fuente.render(f"Movimientos: {movimientos}", True, blanco)
+    texto3 = fuente.render(f"Nodos expandidos: {nodos}", True, blanco)
     pantalla.blit(texto1, (ancho // 2 - texto1.get_width() // 2, alto // 2 - 90))
     pantalla.blit(texto2, (ancho // 2 - texto2.get_width() // 2, alto // 2 - 40))
     pantalla.blit(texto3, (ancho // 2 - texto3.get_width() // 2, alto // 2 + 10))
     btn_menu = pygame.Rect(ancho // 2 - 100, alto // 2 + 60, 200, 50)
-    pygame.draw.rect(pantalla, verde, btn_menu, border_radius=10)
+    pygame.draw.rect(pantalla, color_botones, btn_menu, border_radius=10)
     txt_menu = fuente.render("Volver al menú", True, blanco)
     pantalla.blit(txt_menu, (btn_menu.x + 10, btn_menu.y + 10))
     pygame.display.flip()
@@ -180,8 +186,8 @@ def main():
                 reloj.tick(FPS)
         else:
             # Mostrar mensaje en pantalla
-            pantalla.fill(gris)
-            texto = fuente.render("¡No se encontró solución!", True, rojo)
+            pantalla.fill(fondo_menu)
+            texto = fuente.render("¡No se encontró solución!", True, color_casillas)
             pantalla.blit(texto, (ancho // 2 - texto.get_width() // 2, alto // 2))
             pygame.display.flip()
             print("¡No se encontró solución!")  # Mensaje en terminal
