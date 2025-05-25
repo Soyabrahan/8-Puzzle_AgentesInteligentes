@@ -30,28 +30,36 @@ verde = (0, 200, 70)
 gris = (220, 220, 220)
 
 #-->Aleatoriedad del tablero<--
+# def CrearTablero():
+#     while True:
+#         tablero = list(range(9)) #Crea una lista de 0 a 8
+#         random.shuffle(tablero) #Mezcla la lista
+#         if esResoluble(tablero, objetivo): #Si el tablero es resoluble
+#             return tablero #Devuelve el tablero
+
 def CrearTablero():
-    while True:
-        tablero = list(range(9)) #Crea una lista de 0 a 8
-        random.shuffle(tablero) #Mezcla la lista
-        if esResoluble(tablero, objetivo): #Si el tablero es resoluble
-            return tablero #Devuelve el tablero
+    #return [5, 0, 1, 6, 3, 2, 8, 7, 4] #18 movimientos
+     return [6,1,0,8,5,7,2,4,3] #22 movimientos
+
         
 #-->Comprobar si el tablero es resoluble<--
 objetivo = [1, 2, 3, 8, 0, 4, 7, 6, 5]
 
+def contar_inversiones(lista):
+    inv = 0
+    for i in range(len(lista)):
+        for j in range(i+1, len(lista)):
+            if lista[i] > lista[j]:
+                inv += 1
+    return inv
+
 def esResoluble(tablero, objetivo):
-    # Quita el 0 (espacio vacío) de ambos
     t = [x for x in tablero if x != 0]
     o = [x for x in objetivo if x != 0]
-    # Calcula la permutación necesaria para convertir t en o
-    inv = 0
-    for i in range(len(t)):
-        for j in range(i+1, len(t)):
-            # Compara la posición de los valores en el objetivo
-            if o.index(t[i]) > o.index(t[j]):
-                inv += 1
-    return inv % 2 == 0
+    inv_tablero = contar_inversiones(t)
+    inv_objetivo = contar_inversiones(o)
+    # El puzzle es resoluble si la paridad de inversiones es igual
+    return inv_tablero % 2 == inv_objetivo % 2
 
 #-->Dibujar el tablero<--
 def dibujar_tablero(pantalla, tablero, fuente):
