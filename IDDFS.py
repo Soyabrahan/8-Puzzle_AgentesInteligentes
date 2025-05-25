@@ -35,7 +35,7 @@ def dls(estado, limite, visitados):
 
     for vecino in obtener_vecinos(estado):
         if tuple(vecino) not in visitados:
-            resultado = dls(vecino, limite - 1, visitados.copy())  # <-- usa .copy() aquí
+            resultado = dls(vecino, limite - 1, visitados)  # Llama recursivamente a DLS
             if resultado:
                 return [estado] + resultado
     return None  # Si no se encontró solución, devuelve None
