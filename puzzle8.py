@@ -8,9 +8,6 @@ import sys  #sistema
 import time
 import IDDFS
 import AgenteInformado
-#--->Importaciones<---
-
-
 
 #--->CONFIGURACION GENERAL<---
 tamCasilla = 120  # Más grande para mejor visualización
@@ -35,16 +32,16 @@ color_casillas = (252, 92, 92)
 color_letras = blanco
 
 #-->Aleatoriedad del tablero<--
-# def CrearTablero():
-#     while True:
-#         tablero = list(range(9)) #Crea una lista de 0 a 8
-#         random.shuffle(tablero) #Mezcla la lista
-#         if esResoluble(tablero, objetivo): #Si el tablero es resoluble
-#             return tablero #Devuelve el tablero
-
 def CrearTablero():
+    while True:
+        tablero = list(range(9)) #Crea una lista de 0 a 8
+        random.shuffle(tablero) #Mezcla la lista
+        if esResoluble(tablero, objetivo): #Si el tablero es resoluble
+            return tablero #Devuelve el tablero
+
+#def CrearTablero():
     #return [5, 0, 1, 6, 3, 2, 8, 7, 4] #18 movimientos
-     return [6,1,0,8,5,7,2,4,3] #22 movimientos
+     #return [6,1,0,8,5,7,2,4,3] #22 movimientos
      #return [1, 2, 3, 4, 5, 6, 0, 7, 8] #irresoluble
 
         
@@ -83,7 +80,7 @@ def dibujar_tablero(pantalla, tablero, fuente):
 
 def mostrar_menu(pantalla, fuente):
     pantalla.fill(fondo_menu)  # Fondo menú
-    titulo = fuente.render("Puzzle 8 - Selecciona el agente", True, color_letras)
+    titulo = fuente.render("PUZZLE 8 ", True, color_letras)
     pantalla.blit(titulo, (ancho // 2 - titulo.get_width() // 2, 30))
 
     btn_iddfs = pygame.Rect(ancho // 2 - 160, 120, 320, 60)
