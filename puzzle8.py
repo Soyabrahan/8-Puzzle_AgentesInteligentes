@@ -10,10 +10,11 @@ import IDDFS
 import AgenteInformado
 
 #--->CONFIGURACION GENERAL<---
-tamCasilla = 120  # Más grande para mejor visualización
+tamCasilla = 120
 tamTablero = 3
-ancho = tamCasilla * tamTablero
-alto = tamCasilla * tamTablero + 120  # Espacio extra para menú/info
+margen_lateral = 80  # Espacio a los lados
+ancho = tamCasilla * tamTablero + 2 * margen_lateral  # Más ancho
+alto = tamCasilla * tamTablero + 120
 FPS = 30
 tamFuente = 28  # Más pequeño para que quepa mejor
 
@@ -26,9 +27,9 @@ verde = (0, 200, 70)
 gris = (220, 220, 220)
 
 # Nuevos colores personalizados para la nueva orden
-fondo_menu = (52, 33, 52)
-color_botones = (142, 114, 176)
-color_casillas = (252, 92, 92)
+fondo_menu = (30, 30, 36)
+color_botones = (84, 84, 92)
+color_casillas = (56, 176, 220)
 color_letras = blanco
 
 #-->Aleatoriedad del tablero<--
@@ -66,27 +67,27 @@ def esResoluble(tablero, objetivo):
 
 #-->Dibujar el tablero<--
 def dibujar_tablero(pantalla, tablero, fuente):
-    pantalla.fill(fondo_menu) # Fondo del tablero igual al menú
-    for i in range(9):  # Recorre cada casilla del tablero
-        x = (i % tamTablero) * tamCasilla  # Calcula la posición x de la casilla
-        y = (i // tamTablero) * tamCasilla + 60  # Deja espacio arriba para info
-        valor = tablero[i]  # Obtiene el valor de la casilla
-        if valor != 0:  # Si la casilla no es el espacio vacío
-            pygame.draw.rect(pantalla, color_casillas, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)  # Casilla
-            texto = fuente.render(str(valor), True, color_letras)  # Letras negras
-            rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))  # Centra el texto
-            pantalla.blit(texto, rect)  # Dibuja el texto en la pantalla
-        pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2, border_radius=10)  # Dibuja el borde negro
+    pantalla.fill(fondo_menu)
+    for i in range(9):
+        x = (i % tamTablero) * tamCasilla + margen_lateral  # Centrado horizontal
+        y = (i // tamTablero) * tamCasilla + 60
+        valor = tablero[i]
+        if valor != 0:
+            pygame.draw.rect(pantalla, color_casillas, (x+5, y+5, tamCasilla-10, tamCasilla-10), border_radius=10)
+            texto = fuente.render(str(valor), True, color_letras)
+            rect = texto.get_rect(center=(x + tamCasilla // 2, y + tamCasilla // 2))
+            pantalla.blit(texto, rect)
+        pygame.draw.rect(pantalla, negro, (x, y, tamCasilla, tamCasilla), 2, border_radius=10)
 
 def mostrar_menu(pantalla, fuente):
-    pantalla.fill(fondo_menu)  # Fondo menú
+    pantalla.fill(fondo_menu)
     titulo = fuente.render("PUZZLE 8 ", True, color_letras)
     pantalla.blit(titulo, (ancho // 2 - titulo.get_width() // 2, 30))
 
     btn_iddfs = pygame.Rect(ancho // 2 - 160, 120, 320, 60)
     btn_astar = pygame.Rect(ancho // 2 - 160, 210, 320, 60)
-    pygame.draw.rect(pantalla, color_botones, btn_iddfs, border_radius=15)  # Botón
-    pygame.draw.rect(pantalla, color_botones, btn_astar, border_radius=15)  # Botón
+    pygame.draw.rect(pantalla, color_botones, btn_iddfs, border_radius=15)
+    pygame.draw.rect(pantalla, color_botones, btn_astar, border_radius=15)
 
     txt_iddfs = fuente.render("Agente No Informado (IDDFS)", True, color_letras)
     txt_astar = fuente.render("Agente Informado (A*)", True, color_letras)

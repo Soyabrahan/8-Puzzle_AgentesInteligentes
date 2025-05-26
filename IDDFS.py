@@ -23,7 +23,7 @@ def obtener_vecinos(estado):
 nodos_expandidos = 0  # Variable global
 
 # Búsqueda en profundidad limitada (DLS)
-def dls(estado, limite, visitados):
+def dls(estado, limite, path):
     global nodos_expandidos
     nodos_expandidos += 1
     if estado == objetivo:
@@ -31,11 +31,9 @@ def dls(estado, limite, visitados):
     if limite == 0:
         return None
 
-    visitados.add(tuple(estado))
-
     for vecino in obtener_vecinos(estado):
-        if tuple(vecino) not in visitados:
-            resultado = dls(vecino, limite - 1, visitados.copy())  # Llama recursivamente a DLS
+        if vecino not in path:  # Evita ciclos en la rama actual
+            resultado = dls(vecino, limite - 1, path + [vecino])  # Llama recursivamente a DLS
             if resultado:
                 return [estado] + resultado
     return None  # Si no se encontró solución, devuelve None
@@ -45,8 +43,7 @@ def iddfs(inicial, max_profundidad=30):
     global nodos_expandidos
     nodos_expandidos = 0  # Reinicia el contador antes de cada búsqueda
     for limite in range(max_profundidad):  # Prueba con límites de profundidad crecientes
-        visitados = set()  # Conjunto de estados visitados para cada iteración
-        camino = dls(inicial, limite, visitados)  # Llama a DLS con el límite actual
-        if camino:  # Si se encontró solución
-            return camino  # Devuelve el camino
+        resultado = dls(inicial, limite, [inicial])  # Llama a DLS con el límite actual
+        if resultado:  # Si se encontró solución
+            return resultado  # Devuelve el camino
     return None  # Si no se encontró solución en ningún límite, devuelve None
