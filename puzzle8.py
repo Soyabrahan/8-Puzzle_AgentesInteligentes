@@ -44,6 +44,7 @@ def CrearTablero():
     #return [5, 0, 1, 6, 3, 2, 8, 7, 4] #18 movimientos
      #return [6,1,0,8,5,7,2,4,3] #22 movimientos
      #return [1, 2, 3, 4, 5, 6, 0, 7, 8] #irresoluble
+    #  return [8,7,2,0,5,6,3,4,1] #irresoluble
 
         
 #-->Comprobar si el tablero es resoluble<--
@@ -146,6 +147,26 @@ def main():
         dibujar_tablero(pantalla, tablero, fuente)
         pygame.display.flip()
         time.sleep(0.5)
+
+        # Verifica si es resoluble antes de intentar resolver
+        if not esResoluble(tablero, objetivo):
+            pantalla.fill(fondo_menu)
+            texto = fuente.render("¡Tablero irresoluble!", True, rojo)
+            pantalla.blit(texto, (ancho // 2 - texto.get_width() // 2, alto // 2))
+            pygame.display.flip()
+            print("¡Tablero irresoluble!")  # Mensaje en terminal
+
+            # Espera a que el usuario haga click o cierre la ventana
+            esperando_click = True
+            while esperando_click:
+                for evento in pygame.event.get():
+                    if evento.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if evento.type == pygame.MOUSEBUTTONDOWN:
+                        esperando_click = False
+                reloj.tick(FPS)
+            continue  # Vuelve al menú o reinicia
 
         t0 = time.time()
         if seleccion == "iddfs":
